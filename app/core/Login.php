@@ -67,6 +67,12 @@ class Login
         add_filter('login_display_language_dropdown', '__return_false');
     }
 
+    /**
+     * redirectLoggedOutUsers
+     *
+     * Redirect users to login page if visiting parents portal and not logged in.
+     * @return void
+     */
     private function redirectLoggedOutUsers()
     {
         add_action('template_redirect', function () {
