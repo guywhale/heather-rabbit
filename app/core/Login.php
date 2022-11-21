@@ -9,6 +9,13 @@ namespace Hwale\Core;
 class Login
 {
     /**
+     * protectedPageIds
+     *
+     * @var array
+     */
+    private $protectedPageIds = [];
+
+    /**
      * loginEnqueue
      *
      * Set style sheet
@@ -22,6 +29,11 @@ class Login
             'login_enqueue_scripts',
             function () {
                 $logoUrl = get_stylesheet_directory_uri() . '/images/logo-login.svg';
+                $logo = get_field('logo', 'company_info') ?: null;
+
+                if ($logo) {
+                    $logoUrl = $logo['url'];
+                }
 
                 echo "<style type=\"text/css\">
                     #login h1 a,
@@ -71,23 +83,71 @@ class Login
      * redirectLoggedOutUsers
      *
      * Redirect users to login page if visiting parents portal and not logged in.
+     * @param  array $protectedPageIds
      * @return void
      */
-    private function redirectLoggedOutUsers()
+    private function redirectLoggedOutUsers(array $protectedPageIds)
     {
-        add_action('template_redirect', function () {
-            if (!is_user_logged_in() && is_page('parents')) {
+        if (empty($protectedPageIds)) {
+            return;
+        }
+        add_action('template_redirect', function () use ($protectedPageIds) {
+            if (!is_user_logged_in() && is_page($protectedPageIds)) {
                 auth_redirect();
             }
         });
     }
 
+    /**
+     * customLoginMessage
+     *
+     * Show a custom login message if user is redirected to login
+     * from a protected page.
+     * @param  array $protectedPageIds
+     * @return void
+     */
+    private function customLoginMessage(array $protectedPageIds)
+    {
+        add_filter('login_message', function () use ($protectedPageIds) {
+            if (empty($_REQUEST) || !key_exists('redirect_to', $_REQUEST) || empty($_REQUEST['redirect_to'])) {
+                return;
+            }
+
+            $prevPath = parse_url($_REQUEST['redirect_to'], PHP_URL_PATH);
+            $page = get_page_by_path($prevPath);
+
+            if (in_array($page->ID, $protectedPageIds, true)) {
+                return "<p class=\"message\">Please login to access this page.</p>";
+            }
+        });
+    }
+
+    /**
+     * getProtectedPages
+     *
+     * Get an array of the page IDs of all protected pages from the ACF field in dashboard.
+     * @return array
+     */
+    private function getProtectedPages()
+    {
+        $protectedIds = [];
+        $protectedRaw = get_field('protected_pages', 'protected_pages') ?: null;
+
+        if ($protectedRaw) {
+            $protectedIds = array_map(fn($data) => $data['page'], $protectedRaw);
+        }
+
+        return $protectedIds;
+    }
+
     public function __construct()
     {
+        $this->protectedPageIds = $this->getProtectedPages();
         $this->loginEnqueue();
         $this->loginHeaderUrl();
         $this->loginHeaderTitle();
         $this->hideLanguageDropdown();
-        $this->redirectLoggedOutUsers();
+        $this->redirectLoggedOutUsers($this->protectedPageIds);
+        $this->customLoginMessage($this->protectedPageIds);
     }
 }
