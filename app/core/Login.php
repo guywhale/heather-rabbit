@@ -17,6 +17,21 @@ class Login
     private function loginEnqueue()
     {
         add_action('login_enqueue_scripts', fn() =>  wp_enqueue_style('app', get_theme_file_uri('/build/app.css')));
+        // Set logo image
+        add_action(
+            'login_enqueue_scripts',
+            function () {
+                $logoUrl = get_stylesheet_directory_uri() . '/images/logo-login.svg';
+
+                echo "<style type=\"text/css\">
+                    #login h1 a,
+                    .login h1 a {
+                        background-image: url({$logoUrl});
+                        background-position: center;
+                    }
+                </style>";
+            }
+        );
     }
 
     /**
