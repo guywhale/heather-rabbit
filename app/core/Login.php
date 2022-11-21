@@ -67,11 +67,21 @@ class Login
         add_filter('login_display_language_dropdown', '__return_false');
     }
 
+    private function redirectLoggedOutUsers()
+    {
+        add_action('template_redirect', function () {
+            if (!is_user_logged_in() && is_page('parents')) {
+                auth_redirect();
+            }
+        });
+    }
+
     public function __construct()
     {
         $this->loginEnqueue();
         $this->loginHeaderUrl();
         $this->loginHeaderTitle();
         $this->hideLanguageDropdown();
+        $this->redirectLoggedOutUsers();
     }
 }
