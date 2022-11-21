@@ -16,7 +16,17 @@ class AcfConfig
                 'menu_title'    => 'Company Information',
                 'menu_slug'     => 'company-information',
                 'capability'    => 'edit_posts',
-                'redirect'      => false
+                'redirect'      => false,
+                'post_id'       => 'company_info',
+            ]);
+
+            acf_add_options_page([
+                'page_title'    => 'Protected Pages',
+                'menu_title'    => 'Protected Pages',
+                'menu_slug'     => 'protected-pages',
+                'capability'    => 'edit_posts',
+                'redirect'      => false,
+                'post_id'       => 'protected_pages',
             ]);
         }
     }
