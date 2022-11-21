@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Customisation of login and registration forms
+ * Customisation of login, lost password and registration pages
  */
 
 namespace Hwale\Core;
@@ -11,12 +11,12 @@ class Login
     /**
      * loginEnqueue
      *
-     * Set style sheet for login/registration screens
+     * Set style sheet
      * @return void
      */
     private function loginEnqueue()
     {
-        add_action('login_enqueue_scripts', fn () =>  wp_enqueue_style('app', get_theme_file_uri('/build/app.css')));
+        add_action('login_enqueue_scripts', fn() =>  wp_enqueue_style('app', get_theme_file_uri('/build/app.css')));
     }
 
     /**
@@ -38,7 +38,7 @@ class Login
      */
     private function loginHeaderTitle()
     {
-        add_filter('login_headertext', fn () => get_bloginfo('name'));
+        add_filter('login_headertext', fn() => get_bloginfo('name'));
     }
 
     /**
