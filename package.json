@@ -1,0 +1,38 @@
+{
+  "name": "hwale",
+  "version": "1.0.0",
+  "description": "A boilerplate WordPress theme.",
+  "main": "build/app.js",
+  "scripts": {
+    "preview": "npm-run-all --parallel sync wpstart tailwindwatch",
+    "sync": "browser-sync start -p 'hwale-boilerplate.lndo.site' --files '**/*.php' 'build/*.js' 'build/*.css'",
+    "buildwp": "wp-scripts build",
+    "build": "npm-run-all --sequential buildwp tailwindbuild",
+    "wpstart": "wp-scripts start",
+    "start": "npm-run-all --parallel wpstart tailwindwatch",
+    "tailwindbuild": "tailwindcss -i ./src/app.scss -o ./build/app.css --minify",
+    "tailwindwatch": "tailwindcss -i ./src/app.scss -o ./build/app.css --watch --minify",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guywhale/hwale-boilerplate.git"
+  },
+  "author": "Guy Whale",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guywhale/hwale-boilerplate/issues"
+  },
+  "homepage": "https://github.com/guywhale/hwale-boilerplate#readme",
+  "devDependencies": {
+    "@wordpress/scripts": "^23.3.0",
+    "autoprefixer": "^10.4.13",
+    "browser-sync": "^2.27.10",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.18",
+    "tailwindcss": "^3.2.1"
+  },
+  "dependencies": {
+    "alpinejs": "^3.10.5"
+  }
+}

@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1,
+    .h1 {
+        @apply text-4xl md:text-6xl lg:text-8xl;
+    }
+
+    h2,
+    .h2 {
+        @apply text-2xl md:text-4xl;
+    }
+
+    h3,
+    .h3 {
+        @apply text-xl md:text-2xl;
+    }
+
+    h4,
+    .h4 {
+        @apply text-lg md:text-xl;
+    }
+}
+
+@layer components {
+    .wp-core-ui .button,
+    .button {
+        @apply text-white uppercase transition-colors bg-red-800 rounded hover:bg-gray-400 hover:text-black font-bold py-3 px-4 cursor-pointer border-0 text-base ;
+    }
+}
