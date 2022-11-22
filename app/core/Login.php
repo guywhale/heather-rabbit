@@ -193,6 +193,28 @@ class Login
         return $protectedIds;
     }
 
+    /**
+     * hideAdminBar
+     *
+     * Hide admin dashbar for memebrs who don't have access to the dashboard.
+     * @param  string $capability The capability to check for.
+     * @return void
+     */
+    private function hideAdminBar(string $capability)
+    {
+        if (!$capability || !is_user_logged_in()) {
+            return;
+        }
+
+        $user = wp_get_current_user();
+
+        if (isset($user->allcaps) && is_array($user->allcaps)) {
+            if (!array_key_exists($capability, $user->allcaps)) {
+                show_admin_bar(false);
+            }
+        }
+    }
+
     public function __construct()
     {
         $this->protectedPageIds = $this->getProtectedPages();
@@ -206,5 +228,6 @@ class Login
         $this->redirectLoggedOutUsers($this->protectedPageIds);
         $this->customLoginMessage($this->protectedPageIds);
         $this->blockNonAdminMembers($this->capability, $this->homePortalUrl);
+        $this->hideAdminBar($this->capability);
     }
 }
