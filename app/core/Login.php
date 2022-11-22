@@ -80,6 +80,38 @@ class Login
     }
 
     /**
+     * blockNonAdminMembers
+     *
+     * Prevents site members without required permissions from accessing
+     * the dashboard.
+     *
+     * Whether a user needs the dashboard is determined by checking their
+     * capabilities => https://wordpress.org/support/article/roles-and-capabilities/.
+     *
+     * If their role lacks the specified capability, they are redirected to
+     * the specified membership home portal url.
+     *
+     * @param  string $capability The capability to check for.
+     * @param  string $homePortalUrl The URL of the portal home to redirect to.
+     * @return void
+     */
+    private function blockNonAdminMembers(string $capability, string $homePortalUrl)
+    {
+        add_action('admin_init', function () use ($capability, $homePortalUrl) {
+            if (!defined('DOING_AJAX') || !DOING_AJAX) {
+                $user = wp_get_current_user();
+
+                if (isset($user->allcaps) && is_array($user->allcaps)) {
+                    if (!array_key_exists($capability, $user->allcaps)) {
+                        wp_safe_redirect($homePortalUrl);
+                        exit;
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * redirectLoggedOutUsers
      *
      * Redirect users to login page if visiting parents portal and not logged in.
@@ -149,5 +181,6 @@ class Login
         $this->hideLanguageDropdown();
         $this->redirectLoggedOutUsers($this->protectedPageIds);
         $this->customLoginMessage($this->protectedPageIds);
+        $this->blockNonAdminMembers('edit_posts', home_url('/parents'));
     }
 }
