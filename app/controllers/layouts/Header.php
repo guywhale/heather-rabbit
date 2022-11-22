@@ -15,6 +15,7 @@ class Header extends Layouts
     {
         $this->data = [
             'title' => get_the_title(),
+            'loggedIn' => is_user_logged_in(),
         ];
     }
 }
