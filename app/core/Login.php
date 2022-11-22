@@ -215,12 +215,25 @@ class Login
         }
     }
 
-    public function __construct()
+    /**
+     * setProperties
+     *
+     * Set shared properties needed by methods during class construction.
+     * Must be run first in __construct().
+     * @return void
+     */
+    private function setProperties()
     {
         $this->protectedPageIds = $this->getProtectedPages();
         $this->capability = 'edit_posts';
         $this->homePortalUrl = home_url('/parents');
+    }
 
+    public function __construct()
+    {
+        // Set properties first.
+        $this->setProperties();
+        //////////////////////
         $this->loginEnqueue();
         $this->loginHeaderUrl();
         $this->loginHeaderTitle();
