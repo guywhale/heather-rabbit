@@ -4,6 +4,7 @@ use Hwale\Core\AcfConfig;
 use Hwale\Core\Assets;
 use Hwale\Core\Login;
 use Hwale\Core\Menus;
+use Hwale\Core\Optimise;
 use Hwale\Core\ParentRole;
 use Hwale\Core\RegisterAcfBlocks;
 use Hwale\Core\ThemeSupport;
@@ -13,6 +14,7 @@ use function Hwale\autoloader;
 autoloader('core');
 
 // Init
+new Optimise();
 new Login();
 new ParentRole();
 new Assets();

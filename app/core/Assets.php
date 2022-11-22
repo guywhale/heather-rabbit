@@ -11,7 +11,7 @@ class Assets
     private function loadAssets()
     {
         add_action('wp_enqueue_scripts', function () {
-            wp_enqueue_script('app', get_theme_file_uri('/build/app.js'), ['wp-element'], '1.0', true);
+            wp_enqueue_script('app', get_theme_file_uri('/build/app.js'), [], '1.0', true);
             wp_enqueue_style('app', get_theme_file_uri('/build/app.css'));
         });
     }
