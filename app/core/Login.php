@@ -118,6 +118,10 @@ class Login
      */
     private function blockNonAdminMembers(string $capability, string $homePortalUrl)
     {
+        if (!$capability || !$homePortalUrl) {
+            return;
+        }
+
         add_action('admin_init', function () use ($capability, $homePortalUrl) {
             if (!defined('DOING_AJAX') || !DOING_AJAX) {
                 $user = wp_get_current_user();
@@ -141,9 +145,10 @@ class Login
      */
     private function redirectLoggedOutUsers(array $protectedPageIds)
     {
-        if (empty($protectedPageIds)) {
+        if (!$protectedPageIds || empty($protectedPageIds)) {
             return;
         }
+
         add_action('template_redirect', function () use ($protectedPageIds) {
             if (!is_user_logged_in() && is_page($protectedPageIds)) {
                 auth_redirect();
@@ -161,6 +166,10 @@ class Login
      */
     private function customLoginMessage(array $protectedPageIds)
     {
+        if (!$protectedPageIds || empty($protectedPageIds)) {
+            return;
+        }
+
         add_filter('login_message', function () use ($protectedPageIds) {
             if (empty($_REQUEST) || !key_exists('redirect_to', $_REQUEST) || empty($_REQUEST['redirect_to'])) {
                 return;
