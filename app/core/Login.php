@@ -16,6 +16,27 @@ class Login
     private $protectedPageIds = [];
 
     /**
+     * capability
+     *
+     * Set WordPress capability to determine which members
+     * can access the dashboard.
+     *
+     * https://wordpress.org/support/article/roles-and-capabilities/
+     *
+     * @var string
+     */
+    private $capability = '';
+
+    /**
+     * homePortalUrl
+     *
+     * Set the portal home URL members who are not allowed to access
+     * the dashboard should be redirected to,
+     * @var string
+     */
+    private $homePortalUrl = '';
+
+    /**
      * loginEnqueue
      *
      * Set style sheet
@@ -86,7 +107,7 @@ class Login
      * the dashboard.
      *
      * Whether a user needs the dashboard is determined by checking their
-     * capabilities => https://wordpress.org/support/article/roles-and-capabilities/.
+     * capabilities.
      *
      * If their role lacks the specified capability, they are redirected to
      * the specified membership home portal url.
@@ -175,12 +196,15 @@ class Login
     public function __construct()
     {
         $this->protectedPageIds = $this->getProtectedPages();
+        $this->capability = 'edit_posts';
+        $this->homePortalUrl = home_url('/parents');
+
         $this->loginEnqueue();
         $this->loginHeaderUrl();
         $this->loginHeaderTitle();
         $this->hideLanguageDropdown();
         $this->redirectLoggedOutUsers($this->protectedPageIds);
         $this->customLoginMessage($this->protectedPageIds);
-        $this->blockNonAdminMembers('edit_posts', home_url('/parents'));
+        $this->blockNonAdminMembers($this->capability, $this->homePortalUrl);
     }
 }
